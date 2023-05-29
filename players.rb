@@ -1,5 +1,5 @@
 #This class will handle the creation of new players
-class Player
+class Players
   attr_reader :name
   
   def initialize(name)
