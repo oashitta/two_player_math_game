@@ -1,22 +1,55 @@
+require './players'
+require './question'
+
 # This will manage the game flow and keep track of the scores, lives and player turns. handles user input/answer and output/question
 class Game 
 
-  #gotten from the player class?
-  def initialize(p1, p2)
-    @player1 = p1
-    @player2 = p2
+  def initialize(player_1, player_2)
+    @player_1 = player_1
+    @player_2 = player_2
+    @current_player = player_1
+  end
+  
+  # Switches between player 1 and player 2.
+  def switch_players
+    @current_player == @player_1 ? @player_2 : @player_1
+  end
 
-  #if answer is wrong then score = -1,  message = "wrong answer", prints out score(?/3) for both players. moves on to next player
+  def play_game
+
+    while @player_1.lives > 0 && @player_2.lives > 0
+      question = Question.new
+      puts "#{@current_player.name}: #{question.generate}"
+      answer = gets.chomp.to_i
+      
+      if question.correct_answer?(answer)
+        puts "Good Job!"
+        puts "Scores: #{@player_1.name}: #{@player_1.lives}/3,  #{@player_2.name}: #{@player_2.lives}/3"
+      else
+        @current_player.decrease_life
+        puts "Wrong answer!"
+        puts "Scores: #{@player_1.name}: #{@player_1.lives}/3,  #{@player_2.name}: #{@player_2.lives}/3"
+      end
+
+      @current_player = switch_players
+      puts @player_1.lives.zero?
+
+      
+      if @player_1.lives.zero? || @player_2.lives.zero?
+        end_game
+      end
+    end
+  end
+
+      def end_game
+        puts "Game Over!"
+        if @player_1.lives.zero?
+          puts "#{@player_2.name} wins with #{@player_2.lives}/3"
+        else
+          puts "#{@player_1.name} wins with #{@player_1.lives}/3"
+        end
+      end
 
 
-  #if answer is correct then, score = same (remains at current score),  message = "correct answer", prints out scores (?/3) for both players, moves on to next player.
-
-  #where any player's lives = 0, message = "game over", winner is player_ with score of ?/3
+  
 end
-
-# This class will handle the question generation. it will randomly select 2 numbers between 1 and 20 and generate new questions
-
-
-
-
-
